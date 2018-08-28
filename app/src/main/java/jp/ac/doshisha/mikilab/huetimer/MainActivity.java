@@ -1,14 +1,28 @@
 package jp.ac.doshisha.mikilab.huetimer;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.TextView;
+import okhttp3.*;
+
+import java.io.*;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -16,6 +30,30 @@ public class MainActivity extends AppCompatActivity {
     int color_index[] = new int[3];
     int flash_index[] = new int[3];
     private static final int REQUESTCODE_TEST = 1;
+
+    int minute = 0, second = 0;
+    int start_flag = 0;
+    int count;
+    int countup_flag = 0;
+    int demo_flag = 0;
+    long countNumber;
+    long interval = 100;
+    int buttonNum;
+    int time1, time2;
+
+    private TextView timerText;
+    private Timer timer;
+    private Handler handler = new Handler();
+    private CountDown countDown;
+    private Socket socket;
+    private ServerSocket serverSocket;
+
+    String url = "http://172.20.11.100/api/z2YrJsBIMyPZlHWprsFmIjlfI2WaR9kxTHA6XVaI/groups/1/action";
+    //String url = "http://172.20.11.99/api/fKod5kAVYn2n0kXjKZaQ-XiP-CD5RvJQlsPdHD9a/groups/1/action";
+    String json;
+    private String res = "";
+    Button sb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +65,344 @@ public class MainActivity extends AppCompatActivity {
         time_index[1] = 2; time_index[2] = 2;
         color_index[0] = 3; color_index[1] = 0; color_index[2] = 0;
         flash_index[2] = 1;
-        
+
+        thread();
+
+        minute = 0;
+        timerText = findViewById(R.id.timer);
+        timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+
+    }
+
+    //ボタン押した時
+    public void onButtonClick(View v){
+
+        thread();
+
+        switch (v.getId()){
+            case R.id.button_01:
+                if(start_flag == 0 && demo_flag == 0) {
+                    minute += 1;
+                    timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                }
+                break;
+
+            case R.id.button_05:
+                if(start_flag == 0 && demo_flag == 0) {
+                    minute += 5;
+                    timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                }
+                break;
+
+            case R.id.button_10:
+                if(start_flag == 0 && demo_flag == 0) {
+                    minute += 10;
+                    timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                }
+                break;
+
+            case R.id.button_15:
+                if(start_flag == 0 && demo_flag == 0) {
+                    minute += 15;
+                    timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                }
+                break;
+
+            case R.id.demo_button:
+                if(start_flag == 0) {
+                    sb = findViewById(R.id.demo_button);
+                    if(demo_flag == 0) {
+                        demo_flag = 1;
+                        minute = 0;
+                        second = 30;
+                        timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                        sb.setText("デモ中");
+                    }
+                }
+                break;
+
+            case R.id.clear_button:
+                if(start_flag == 0) {
+                    countup_flag = 0;
+                    demo_flag = 0 ;
+                    minute = 0; second = 0;
+                    timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                    timerText.setTextColor(Color.parseColor("#40C4FF"));
+                    if(demo_flag == 0){
+                        sb = findViewById(R.id.demo_button);
+                        sb.setText("デモ用");
+                        demo_flag = 0;
+                    }
+
+                    try {
+                        stopLights();
+                    }catch (IOException e){
+
+                    }
+                }
+                break;
+
+            case R.id.start_button:
+
+                sb = findViewById(R.id.start_button);
+
+                if(start_flag == 0){
+                    if(countup_flag == 0) {
+                        countNumber = (minute*60+second)*1000;
+                        countDown = new CountDown(countNumber, interval);
+                        countDown.start();
+                    }else {
+                        countDown.countup();
+                    }
+
+                    sb.setText("Stop");
+                    start_flag = 1;
+                }
+                else{
+                    countDown.cancel();
+                    if(countup_flag == 1){
+                        timer.cancel();
+                    }
+                    sb.setText("Start");
+                    start_flag = 0;
+                }
+                break;
+        }
+    }
+
+    //カウントダウン
+    public class CountDown extends CountDownTimer {
+
+        public CountDown(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            // カウントダウン完了後に呼ばれる
+            count = 0;
+            countup_flag = 1;
+            try {
+                endLights();
+            }catch (IOException e){
+
+            }
+
+            countup();
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            // インターバル(countDownInterval)毎に呼ばれる
+            minute = (int)millisUntilFinished/1000/60;  second = (int)millisUntilFinished/1000%60;
+            timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+        }
+
+        //カウントアップ
+        public void countup() {
+            timer = new Timer();
+            timerText.setTextColor(Color.RED);
+
+            if(time_index[1] == 0)  time1 = 600;
+            else if (time_index[1] == 1) time1 = 1800;
+            else time1 = 3000;
+            if(time_index[2] == 0) time2 = 1200;
+            else if (time_index[2] == 1) time2 = 3600;
+            else time2 = 6000;
+
+            timer.scheduleAtFixedRate (new TimerTask() {
+                @Override
+                public void run() {
+                    // handlerdを使って処理をキューイングする
+                    handler.post(new Runnable() {
+                        public void run() {
+                            count++;
+                            minute = count * 100 / 1000 / 60;   second = count * 100 / 1000 % 60;
+                            timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                            if(count == 100 &&demo_flag==1){
+                                try {
+                                    dangerLights();
+                                }catch (IOException e){
+
+                                }
+                            }
+                            if(count == 200 && demo_flag==1){
+                                try {
+                                    danger2Lights();
+                                }catch (IOException e){
+
+                                }
+                            }
+                            if (count == time1) {
+                                try {
+                                    dangerLights();
+                                }catch (IOException e){
+
+                                }
+                            }
+                            if (count == time2) {
+                                try {
+                                    danger2Lights();
+                                }catch (IOException e){
+
+                                }
+                            }
+                        }
+                    });
+                }
+            }, 0, interval);
+        }
+
+    }
+
+    public void postTest() {
+        MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+        RequestBody body = RequestBody.create(JSON, json);
+
+        Request request = new Request.Builder()
+                .url(url)
+                .put(body)
+                .build();
+
+        OkHttpClient client = new OkHttpClient();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                failMessage();
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                res = response.body().string();
+                runOnUiThread(new Runnable() {
+                    public void run() {
+                        Log.w("onResponse", res);
+                    }
+                });
+            }
+        });
+    }
+    private void failMessage() {
+        runOnUiThread(new Runnable() {
+            public void run() {
+                Log.w("failMessage", "fail");
+            }
+        });
+    }
+
+
+    void dangerLights() throws IOException{
+        if(color_index[1] == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
+        else if(color_index[1] == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
+        else if(color_index[1] == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":240,\"sat\":254}";
+        else json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
+        postTest();
+    }
+
+    void danger2Lights() throws IOException{
+        if(color_index[2] == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
+        else if(color_index[2] == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
+        else if(color_index[2] == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":240,\"sat\":254}";
+        else json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
+        postTest();
+    }
+
+    void endLights() throws IOException{
+        if(color_index[0] == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
+        else if(color_index[0] == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
+        else if(color_index[0] == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":240,\"sat\":254}";
+        else json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
+        postTest();
+    }
+
+    void stopLights() throws IOException{
+        json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
+        postTest();
+    }
+
+    void thread(){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    serverSocket = new ServerSocket(8080);
+                    for(;;) {
+                        socket = serverSocket.accept();
+                        InputStreamReader in = new InputStreamReader(socket.getInputStream());
+                        BufferedReader br = new BufferedReader(in);
+                        String message = br.readLine();
+
+                        Log.w("aaaaaaaaaaaaaaaaa", message);
+                        String[] m = message.split(",", 0);
+                        minute = Integer.parseInt(m[0]);
+                        second = Integer.parseInt(m[1]);
+                        start_flag = Integer.parseInt(m[2]);
+                        buttonNum = Integer.parseInt(m[3]);
+                        countup_flag = Integer.parseInt(m[4]);
+                        count = Integer.parseInt(m[5]);
+                        demo_flag = Integer.parseInt(m[6]);
+
+                        handler.post(new Runnable() {
+                            public void run() {
+                                timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                                second++;
+                                if(buttonNum == 50) {
+                                    Button sb = findViewById(R.id.start_button);
+                                    if (start_flag == 1) {
+                                        if (countup_flag == 0) {
+                                            countNumber = (minute * 60 + second) * 1000;
+                                            countDown = new CountDown(countNumber, interval);
+                                            countDown.start();
+                                        } else {
+                                            countDown.countup();
+                                        }
+                                        sb.setText("Stop");
+                                    } else {
+                                        countDown.cancel();
+                                        if (countup_flag == 1) {
+                                            timer.cancel();
+                                        }
+                                        sb.setText("Start");
+                                    }
+                                }else if(buttonNum == 0){
+                                    countup_flag = 0;
+                                    demo_flag = 0 ;
+                                    minute = 0; second = 0;
+                                    timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                                    timerText.setTextColor(Color.parseColor("#40C4FF"));
+                                    if(demo_flag == 0){
+                                        sb = findViewById(R.id.demo_button);
+                                        sb.setText("デモ用");
+                                    }
+
+                                    try {
+                                        stopLights();
+                                    }catch (IOException e){
+
+                                    }
+                                }else if(buttonNum == 30){
+                                    if(start_flag == 0) {
+                                        if(demo_flag == 1) {
+                                            minute = 0;
+                                            second = 30;
+                                            timerText.setText(String.format("%1$02d:%2$02d", minute, second));
+                                            sb = findViewById(R.id.demo_button);
+                                            sb.setText("デモ中");
+                                        }
+                                    }
+                                }
+
+                            }
+                        });
+                    }
+
+                }catch( IOException e ) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
     }
 
     @Override
