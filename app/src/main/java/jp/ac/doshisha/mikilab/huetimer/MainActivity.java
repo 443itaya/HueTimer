@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         time_index[1] = 2; time_index[2] = 2;
-        color_index[0] = 3; color_index[1] = 0; color_index[2] = 0;
+        color_index[0] = 5; color_index[1] = 1; color_index[2] = 0;
         flash_index[2] = 1;
 
         thread();
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
                     if(demo_flag == 0) {
                         demo_flag = 1;
                         minute = 0;
-                        second = 30;
+                        second = 10;
                         timerText.setText(String.format("%1$02d:%2$02d", minute, second));
                         sb.setText("デモ中");
                     }
@@ -183,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
             count = 0;
             countup_flag = 1;
             try {
-                endLights();
+                lights(color_index[0]);
             }catch (IOException e){
 
             }
@@ -219,34 +219,199 @@ public class MainActivity extends AppCompatActivity {
                             count++;
                             minute = count * 100 / 1000 / 60;   second = count * 100 / 1000 % 60;
                             timerText.setText(String.format("%1$02d:%2$02d", minute, second));
-                            if(count == 100 &&demo_flag==1){
-                                try {
-                                    dangerLights();
-                                }catch (IOException e){
+                            if(demo_flag == 1){     //デモ用
+                                if(count < 100){
+                                    if(flash_index[0] == 1){
+                                        if(count % 30 == 0){
+                                            try{
+                                                noLights(color_index[0]);
+                                            }catch (IOException e){
 
+                                            }
+                                        }else if(count % 15 == 0){
+                                            try {
+                                                lights(color_index[0]);
+                                            }catch (IOException e){
+
+                                            }
+                                        }
+
+                                    }
+                                }else if(count == 100){
+                                    try{
+                                        lights(color_index[1]);
+                                    }catch (IOException e){
+
+                                    }
+                                }else if(count < 200){
+                                    if(flash_index[1] == 1){
+                                        if(count % 30 == 0){
+                                            try{
+                                                noLights(color_index[1]);
+                                            }catch (IOException e){
+
+                                            }
+                                        }else if(count % 15 == 0){
+                                            try {
+                                                lights(color_index[1]);
+                                            }catch (IOException e){
+
+                                            }
+                                        }
+                                    }
+                                }else if(count == 200){
+                                    try{
+                                        lights(color_index[2]);
+                                    }catch (IOException e){
+
+                                    }
+                                }else{
+                                    if(flash_index[2] == 1){
+                                        if(count % 30 == 0){
+                                            try{
+                                                noLights(color_index[2]);
+                                            }catch (IOException e){
+
+                                            }
+                                        }else if(count % 15 == 0){
+                                            try {
+                                                lights(color_index[2]);
+                                            }catch (IOException e){
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }else{      //通常使用
+                                if(time1 < time2){
+                                    if(count < time1){
+                                        if(flash_index[0] == 1){
+                                            if(count % 20 == 0){
+                                                try{
+                                                    noLights(color_index[0]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }else if(count % 10 == 0){
+                                                try {
+                                                    lights(color_index[0]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }
+
+                                        }
+                                    }else if(count == time1){
+                                        try{
+                                            lights(color_index[1]);
+                                        }catch (IOException e){
+
+                                        }
+                                    }else if(count < time2){
+                                        if(flash_index[1] == 1){
+                                            if(count % 20 == 0){
+                                                try{
+                                                    noLights(color_index[1]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }else if(count % 10 == 0){
+                                                try {
+                                                    lights(color_index[1]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }
+                                        }
+                                    }else if(count == time2){
+                                        try{
+                                            lights(color_index[2]);
+                                        }catch (IOException e){
+
+                                        }
+                                    }else{
+                                        if(flash_index[2] == 1){
+                                            if(count % 20 == 0){
+                                                try{
+                                                    noLights(color_index[2]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }else if(count % 10 == 0){
+                                                try {
+                                                    lights(color_index[2]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                }else{
+                                    if(count < time2){
+                                        if(flash_index[0] == 1){
+                                            if(count % 20 == 0){
+                                                try{
+                                                    noLights(color_index[0]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }else if(count % 10 == 0){
+                                                try {
+                                                    lights(color_index[0]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }
+
+                                        }
+                                    }else if(count == time2){
+                                        try{
+                                            lights(color_index[1]);
+                                        }catch (IOException e){
+
+                                        }
+                                    }else if(count < time1){
+                                        if(flash_index[1] == 1){
+                                            if(count % 20 == 0){
+                                                try{
+                                                    noLights(color_index[1]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }else if(count % 10 == 0){
+                                                try {
+                                                    lights(color_index[1]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }
+                                        }
+                                    }else if(count == time1){
+                                        try{
+                                            lights(color_index[2]);
+                                        }catch (IOException e){
+
+                                        }
+                                    }else{
+                                        if(flash_index[2] == 1){
+                                            if(count % 20 == 0){
+                                                try{
+                                                    noLights(color_index[2]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }else if(count % 10 == 0){
+                                                try {
+                                                    lights(color_index[2]);
+                                                }catch (IOException e){
+
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
-                            if(count == 200 && demo_flag==1){
-                                try {
-                                    danger2Lights();
-                                }catch (IOException e){
 
-                                }
-                            }
-                            if (count == time1) {
-                                try {
-                                    dangerLights();
-                                }catch (IOException e){
-
-                                }
-                            }
-                            if (count == time2) {
-                                try {
-                                    danger2Lights();
-                                }catch (IOException e){
-
-                                }
-                            }
                         }
                     });
                 }
@@ -292,32 +457,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    void dangerLights() throws IOException{
-        if(color_index[1] == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
-        else if(color_index[1] == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
-        else if(color_index[1] == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":240,\"sat\":254}";
-        else json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
-        postTest();
-    }
-
-    void danger2Lights() throws IOException{
-        if(color_index[2] == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
-        else if(color_index[2] == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
-        else if(color_index[2] == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":240,\"sat\":254}";
-        else json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
-        postTest();
-    }
-
-    void endLights() throws IOException{
-        if(color_index[0] == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
-        else if(color_index[0] == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
-        else if(color_index[0] == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":240,\"sat\":254}";
+    void lights(int color) throws IOException{
+        if(color == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
+        else if(color == 1) json = "{\"on\":true,\"hue\":60000,\"bri\":254,\"sat\":254}";
+        else if(color == 2)  json = "{\"on\":true,\"hue\":46014,\"bri\":254,\"sat\":254}";
+        else if(color == 3) json = "{\"on\":true,\"hue\":24000,\"bri\":254,\"sat\":254}";
+        else if(color == 4) json = "{\"on\":true,\"hue\":7774,\"bri\":254,\"sat\":254}";
+        else if(color == 5) json = "{\"on\":true,\"hue\":50000,\"bri\":254,\"sat\":254}";
         else json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
         postTest();
     }
 
     void stopLights() throws IOException{
         json = "{\"on\":true,\"hue\":15324,\"bri\":254,\"sat\":121}";
+        postTest();
+    }
+
+    void noLights(int color) throws  IOException{
+        if(color == 0)  json = "{\"on\":false,\"hue\":0,\"bri\":254,\"sat\":254}";
+        else if(color == 1) json = "{\"on\":false,\"hue\":60000,\"bri\":254,\"sat\":254}";
+        else if(color == 2)  json = "{\"on\":false,\"hue\":46014,\"bri\":240,\"sat\":254}";
+        else if(color == 3) json = "{\"on\":false,\"hue\":24000,\"bri\":240,\"sat\":254}";
+        else if(color == 4) json = "{\"on\":false,\"hue\":7774,\"bri\":254,\"sat\":254}";
+        else if(color == 5) json = "{\"on\":false,\"hue\":50000,\"bri\":254,\"sat\":254}";
+        else json = "{\"on\":false,\"hue\":15324,\"bri\":254,\"sat\":121}";
         postTest();
     }
 
@@ -385,7 +548,7 @@ public class MainActivity extends AppCompatActivity {
                                     if(start_flag == 0) {
                                         if(demo_flag == 1) {
                                             minute = 0;
-                                            second = 30;
+                                            second = 10;
                                             timerText.setText(String.format("%1$02d:%2$02d", minute, second));
                                             sb = findViewById(R.id.demo_button);
                                             sb.setText("デモ中");
