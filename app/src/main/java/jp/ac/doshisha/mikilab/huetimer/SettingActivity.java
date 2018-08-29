@@ -30,6 +30,7 @@ public class SettingActivity extends AppCompatActivity {
         color_index = intent.getIntArrayExtra("color_index");
         flash_index = intent.getIntArrayExtra("flash_index");
 
+        // 時間設定
         Spinner spinner1 = findViewById(R.id.spinner);
         spinner1.setSelection(time_index[0]);
         spinner1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -74,6 +75,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        //色指定
         RadioGroup group1 = (RadioGroup)findViewById(R.id.radioGroup);
         group1.check(R.id.radioButton + color_index[0]);
         group1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -107,6 +109,7 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
+        //フラッシュ指定
         final CheckBox chkbox1 = (CheckBox)findViewById(R.id.checkBox);
         if(flash_index[0] == 1)  chkbox1.setChecked(true);
         chkbox1.setOnClickListener(new View.OnClickListener(){
@@ -159,6 +162,7 @@ public class SettingActivity extends AppCompatActivity {
         });
     }
 
+    //MainActivityへ値を返す
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // handle arrow click here

@@ -48,13 +48,17 @@ public class MainActivity extends AppCompatActivity {
     private Socket socket;
     private ServerSocket serverSocket;
 
+    //KC103
     String url = "http://172.20.11.100/api/z2YrJsBIMyPZlHWprsFmIjlfI2WaR9kxTHA6XVaI/groups/1/action";
+    //KC104
     //String url = "http://172.20.11.99/api/fKod5kAVYn2n0kXjKZaQ-XiP-CD5RvJQlsPdHD9a/groups/1/action";
+
     String json;
     private String res = "";
     Button sb;
 
 
+    //起動後
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,12 +66,15 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //setting 初期設定
         time_index[1] = 2; time_index[2] = 2;
         color_index[0] = 5; color_index[1] = 1; color_index[2] = 0;
         flash_index[2] = 1;
 
+        //smartphoneとの通信
         thread();
 
+        //初期表示
         minute = 0;
         timerText = findViewById(R.id.timer);
         timerText.setText(String.format("%1$02d:%2$02d", minute, second));
@@ -286,13 +293,13 @@ public class MainActivity extends AppCompatActivity {
                                 if(time1 < time2){
                                     if(count < time1){
                                         if(flash_index[0] == 1){
-                                            if(count % 20 == 0){
+                                            if(count % 30 == 0){
                                                 try{
                                                     noLights(color_index[0]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 10 == 0){
+                                            }else if(count % 15 == 0){
                                                 try {
                                                     lights(color_index[0]);
                                                 }catch (IOException e){
@@ -309,13 +316,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else if(count < time2){
                                         if(flash_index[1] == 1){
-                                            if(count % 20 == 0){
+                                            if(count % 30 == 0){
                                                 try{
                                                     noLights(color_index[1]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 10 == 0){
+                                            }else if(count % 15 == 0){
                                                 try {
                                                     lights(color_index[1]);
                                                 }catch (IOException e){
@@ -331,13 +338,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else{
                                         if(flash_index[2] == 1){
-                                            if(count % 20 == 0){
+                                            if(count % 30 == 0){
                                                 try{
                                                     noLights(color_index[2]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 10 == 0){
+                                            }else if(count % 15 == 0){
                                                 try {
                                                     lights(color_index[2]);
                                                 }catch (IOException e){
@@ -349,13 +356,13 @@ public class MainActivity extends AppCompatActivity {
                                 }else{
                                     if(count < time2){
                                         if(flash_index[0] == 1){
-                                            if(count % 20 == 0){
+                                            if(count % 30 == 0){
                                                 try{
                                                     noLights(color_index[0]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 10 == 0){
+                                            }else if(count % 15 == 0){
                                                 try {
                                                     lights(color_index[0]);
                                                 }catch (IOException e){
@@ -372,13 +379,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else if(count < time1){
                                         if(flash_index[1] == 1){
-                                            if(count % 20 == 0){
+                                            if(count % 30 == 0){
                                                 try{
                                                     noLights(color_index[1]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 10 == 0){
+                                            }else if(count % 15 == 0){
                                                 try {
                                                     lights(color_index[1]);
                                                 }catch (IOException e){
@@ -394,13 +401,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else{
                                         if(flash_index[2] == 1){
-                                            if(count % 20 == 0){
+                                            if(count % 30 == 0){
                                                 try{
                                                     noLights(color_index[2]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 10 == 0){
+                                            }else if(count % 15 == 0){
                                                 try {
                                                     lights(color_index[2]);
                                                 }catch (IOException e){
@@ -455,7 +462,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
 
     void lights(int color) throws IOException{
         if(color == 0)  json = "{\"on\":true,\"hue\":0,\"bri\":254,\"sat\":254}";
@@ -575,6 +581,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //SettingActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -595,6 +602,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //SettingActivityから値を持ってくる
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
