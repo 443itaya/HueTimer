@@ -22,7 +22,7 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/spinner" android:textAlignment="center"
             android:textColor="@color/colorPrimary" android:layout_marginEnd="16dp"
-            app:layout_constraintTop_toTopOf="@+id/textView2" android:layout_marginTop="8dp"/>
+            app:layout_constraintTop_toTopOf="@+id/textView2"/>
     <CheckBox
             android:text="Flash"
             android:layout_width="0dp"
@@ -42,8 +42,7 @@
             app:layout_constraintStart_toEndOf="@+id/textView" android:textColor="@color/colorPrimary"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/spinner2"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/portNumber"
-    />
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="32dp"/>
     <TextView
             android:text="color 3"
             android:layout_width="0dp"
@@ -53,7 +52,7 @@
             app:layout_constraintStart_toEndOf="@+id/textView2" android:layout_marginStart="16dp"
             android:textAlignment="center" android:textColor="@color/colorPrimary" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/spinner3" app:layout_constraintTop_toTopOf="@+id/textView2"
-            android:layout_marginTop="8dp"/>
+    />
     <RadioGroup
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -214,15 +213,6 @@
             app:layout_constraintStart_toStartOf="@+id/radioGroup3"
             app:layout_constraintEnd_toEndOf="@+id/radioGroup3"
             app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="24dp"/>
-    <TextView
-            android:text="Port:"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/portNumber" android:textSize="30sp"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="24dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginRight="8dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginLeft="8dp"
-            android:layout_marginStart="8dp" android:textColor="@android:color/black" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toTopOf="@+id/textView2" android:textAllCaps="false" android:gravity="center"/>
+
 
 </android.support.constraint.ConstraintLayout>

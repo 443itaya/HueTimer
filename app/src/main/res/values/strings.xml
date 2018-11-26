@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">HueTimer</string>
-    <string name="action_settings">Settings</string>
-    <string name="title_activity_setting">Setting</string>
+    <string name="action_settings">Color Settings</string>
+    <string name="title_activity_setting">Color Settings</string>
+    <string name="action_settings2">Other Settings</string>
+    <string name="title_activity_setting2">Other Settings</string>
 
     <string-array name="list1">
         <item>0分後</item>
@@ -17,6 +19,13 @@
         <item>2分後</item>
         <item>6分後</item>
         <item>10分後</item>
+    </string-array>
+
+    <string-array name="list_place">
+        <item>KC103</item>
+        <item>KC104</item>
+        <item>KC111</item>
+        <item>Other</item>
     </string-array>
 
 </resources>

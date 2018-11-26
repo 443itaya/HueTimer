@@ -19,8 +19,6 @@ public class SettingActivity extends AppCompatActivity {
     int color_index[] = new int[3];
     int flash_index[] = new int[3];
 
-    private TextView portText;
-
     int id[] = new int[3];
 
     @Override
@@ -173,15 +171,6 @@ public class SettingActivity extends AppCompatActivity {
             }
         });
 
-        //wifi ipアドレス
-        WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        WifiInfo w_info = wifiManager.getConnectionInfo();
-        int ip_addr_i = w_info.getIpAddress();
-        String ip_addr = ((ip_addr_i >> 0) & 0xFF) + "." + ((ip_addr_i >> 8) & 0xFF) + "." + ((ip_addr_i >> 16) & 0xFF) + "." + ((ip_addr_i >> 24) & 0xFF);
-        Log.i("Sample", "IP Address:"+ip_addr);
-//        String ip_addr = "172.20.11.98";
-        portText = findViewById(R.id.portNumber);
-        portText.setText(String.format("IP Address:" + ip_addr));
     }
 
     int IndexToId(int num, int index){
@@ -195,7 +184,7 @@ public class SettingActivity extends AppCompatActivity {
             else if (index == 5) id = R.id.radioButton6;
         }
         else if(num == 1) {
-            if (index == 2) id = R.id.radioButton7;
+            if (index == 0) id = R.id.radioButton7;
             else if (index == 1) id = R.id.radioButton8;
             else if (index == 2) id = R.id.radioButton9;
             else if (index == 3) id = R.id.radioButton10;
@@ -203,7 +192,7 @@ public class SettingActivity extends AppCompatActivity {
             else if (index == 5) id = R.id.radioButton12;
         }
         else if(num == 2) {
-            if (index == 3) id = R.id.radioButton13;
+            if (index == 0) id = R.id.radioButton13;
             else if (index == 1) id = R.id.radioButton14;
             else if (index == 2) id = R.id.radioButton15;
             else if (index == 3) id = R.id.radioButton16;

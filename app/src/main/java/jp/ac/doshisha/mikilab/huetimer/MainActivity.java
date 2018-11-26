@@ -29,7 +29,10 @@ public class MainActivity extends AppCompatActivity {
     int time_index[] = new int[3];
     int color_index[] = new int[3];
     int flash_index[] = new int[3];
-    private static final int REQUESTCODE_TEST = 1;
+    int hue_index;
+    String url;
+    private static final int REQUESTCODE_TEST1 = 1;
+    private static final int REQUESTCODE_TEST2 = 2;
 
     int minute = 0, second = 0;
     int start_flag = 0;
@@ -48,8 +51,10 @@ public class MainActivity extends AppCompatActivity {
     private Socket socket;
     private ServerSocket serverSocket;
 
+    int flashTime = 15;
+
     //KC103
-    String url = "http://172.20.11.100/api/z2YrJsBIMyPZlHWprsFmIjlfI2WaR9kxTHA6XVaI/groups/1/action";
+
     //KC104
     //String url = "http://172.20.11.99/api/fKod5kAVYn2n0kXjKZaQ-XiP-CD5RvJQlsPdHD9a/groups/1/action";
 
@@ -70,6 +75,8 @@ public class MainActivity extends AppCompatActivity {
         time_index[1] = 2; time_index[2] = 2;
         color_index[0] = 5; color_index[1] = 1; color_index[2] = 0;
         flash_index[2] = 1;
+        hue_index = 0;
+        url = "http://172.20.11.100/api/z2YrJsBIMyPZlHWprsFmIjlfI2WaR9kxTHA6XVaI/groups/1/action"; //KC103
 
         //smartphoneとの通信
         thread();
@@ -229,13 +236,13 @@ public class MainActivity extends AppCompatActivity {
                             if(demo_flag == 1){     //デモ用
                                 if(count < 100){
                                     if(flash_index[0] == 1){
-                                        if(count % 30 == 0){
+                                        if(count % (flashTime * 2) == 0){
                                             try{
                                                 noLights(color_index[0]);
                                             }catch (IOException e){
 
                                             }
-                                        }else if(count % 15 == 0){
+                                        }else if(count % flashTime == 0){
                                             try {
                                                 lights(color_index[0]);
                                             }catch (IOException e){
@@ -252,13 +259,13 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }else if(count < 200){
                                     if(flash_index[1] == 1){
-                                        if(count % 30 == 0){
+                                        if(count % (flashTime * 2) == 0){
                                             try{
                                                 noLights(color_index[1]);
                                             }catch (IOException e){
 
                                             }
-                                        }else if(count % 15 == 0){
+                                        }else if(count % flashTime == 0){
                                             try {
                                                 lights(color_index[1]);
                                             }catch (IOException e){
@@ -274,13 +281,13 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                 }else{
                                     if(flash_index[2] == 1){
-                                        if(count % 30 == 0){
+                                        if(count % (flashTime * 2) == 0){
                                             try{
                                                 noLights(color_index[2]);
                                             }catch (IOException e){
 
                                             }
-                                        }else if(count % 15 == 0){
+                                        }else if(count % flashTime == 0){
                                             try {
                                                 lights(color_index[2]);
                                             }catch (IOException e){
@@ -293,13 +300,13 @@ public class MainActivity extends AppCompatActivity {
                                 if(time1 < time2){
                                     if(count < time1){
                                         if(flash_index[0] == 1){
-                                            if(count % 30 == 0){
+                                            if(count % (flashTime * 2) == 0){
                                                 try{
                                                     noLights(color_index[0]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 15 == 0){
+                                            }else if(count % flashTime == 0){
                                                 try {
                                                     lights(color_index[0]);
                                                 }catch (IOException e){
@@ -316,13 +323,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else if(count < time2){
                                         if(flash_index[1] == 1){
-                                            if(count % 30 == 0){
+                                            if(count % (flashTime * 2) == 0){
                                                 try{
                                                     noLights(color_index[1]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 15 == 0){
+                                            }else if(count % flashTime == 0){
                                                 try {
                                                     lights(color_index[1]);
                                                 }catch (IOException e){
@@ -338,13 +345,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else{
                                         if(flash_index[2] == 1){
-                                            if(count % 30 == 0){
+                                            if(count % (flashTime * 2) == 0){
                                                 try{
                                                     noLights(color_index[2]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 15 == 0){
+                                            }else if(count % flashTime == 0){
                                                 try {
                                                     lights(color_index[2]);
                                                 }catch (IOException e){
@@ -356,13 +363,13 @@ public class MainActivity extends AppCompatActivity {
                                 }else{
                                     if(count < time2){
                                         if(flash_index[0] == 1){
-                                            if(count % 30 == 0){
+                                            if(count % (flashTime * 2) == 0){
                                                 try{
                                                     noLights(color_index[0]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 15 == 0){
+                                            }else if(count % flashTime == 0){
                                                 try {
                                                     lights(color_index[0]);
                                                 }catch (IOException e){
@@ -379,13 +386,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else if(count < time1){
                                         if(flash_index[1] == 1){
-                                            if(count % 30 == 0){
+                                            if(count % (flashTime * 2) == 0){
                                                 try{
                                                     noLights(color_index[1]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 15 == 0){
+                                            }else if(count % flashTime == 0){
                                                 try {
                                                     lights(color_index[1]);
                                                 }catch (IOException e){
@@ -401,13 +408,13 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }else{
                                         if(flash_index[2] == 1){
-                                            if(count % 30 == 0){
+                                            if(count % (flashTime * 2) == 0){
                                                 try{
                                                     noLights(color_index[2]);
                                                 }catch (IOException e){
 
                                                 }
-                                            }else if(count % 15 == 0){
+                                            }else if(count % flashTime == 0){
                                                 try {
                                                     lights(color_index[2]);
                                                 }catch (IOException e){
@@ -595,7 +602,13 @@ public class MainActivity extends AppCompatActivity {
             intent.putExtra("time_index", time_index);
             intent.putExtra("color_index", color_index);
             intent.putExtra("flash_index", flash_index);
-            startActivityForResult(intent,REQUESTCODE_TEST);
+            startActivityForResult(intent,REQUESTCODE_TEST1);
+            return true;
+        }
+        if (id == R.id.action_settings2) {
+            Intent intent = new Intent(this, Setting2Activity.class);
+            hue_index = intent.getIntExtra("hue_index",0);
+            startActivityForResult(intent,REQUESTCODE_TEST2);
             return true;
         }
 
@@ -606,11 +619,18 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case REQUESTCODE_TEST:
+            case REQUESTCODE_TEST1:
                 if (RESULT_OK == resultCode) {
                     time_index = data.getIntArrayExtra("time_index");
                     color_index = data.getIntArrayExtra("color_index");
                     flash_index = data.getIntArrayExtra("flash_index");
+                }
+                break;
+            case REQUESTCODE_TEST2:
+                if (RESULT_OK == resultCode) {
+                    hue_index = data.getIntExtra("time_index" ,0);
+                    url = data.getStringExtra("url");
+                    Log.w("url",url);
                 }
                 break;
         }
